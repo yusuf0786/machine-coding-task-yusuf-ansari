@@ -1,36 +1,122 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LeadPulse CRM
+
+A production-grade **CRM Lead Management Dashboard** built with Next.js, React, and Tailwind CSS. Dark-by-default, fully accessible, with real-time search, filtering, pagination, analytics charts, and full CRUD operations on an in-memory mock API.
+
+![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)
+![Tailwind](https://img.shields.io/badge/Tailwind_CSS-4-38BDF8?logo=tailwindcss)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript)
+
+---
+
+## Features
+
+- **Dashboard** — 7 metric cards (total, new, contacted, qualified, converted, lost, conversion rate) with trend indicators
+- **Lead Table** — Sortable by date, paginated (8 per page), with debounced search and multi-filter (status + source)
+- **Lead CRUD** — Create via modal or dedicated page, edit inline, delete with confirmation dialog
+- **Lead Detail** — Full profile card, activity timeline, quick status changer
+- **Analytics** — 4 interactive charts: Leads Over Time (area), Leads by Status (donut), Leads by Source (bar), Conversion Funnel
+- **Dark / Light Mode** — Toggle with persistence, dark by default
+- **Fully Responsive** — Mobile sidebar drawer, responsive grid layouts
+- **Accessible** — WCAG 2.2 AA: skip-to-content, focus-visible rings, aria labels, keyboard navigation, screen-reader text
+- **Mock API** — 23 seed leads, artificial 200-400ms delays, in-memory CRUD with automatic timeline events
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 16 (App Router) |
+| UI | React 19 |
+| Styling | Tailwind CSS v4, CSS custom properties |
+| Forms | react-hook-form + zod |
+| Data Fetching | SWR |
+| Charts | Recharts (dynamic import, no SSR) |
+| Icons | lucide-react |
+| Variants | class-variance-authority (CVA) |
+| Utilities | clsx, tailwind-merge |
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js ≥ 18
+- npm ≥ 9
+
+### Install & Run
 
 ```bash
+# Clone
+git clone <repository-url>
+cd machine-coding-task-yusuf-ansari
+
+# Install dependencies
+npm install
+
+# Copy env
+cp .env.example .env.local
+
+# Start dev server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) — you'll be redirected to the dashboard.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/
+│   ├── api/leads/           # Mock REST API (GET, POST, PUT, DELETE)
+│   ├── dashboard/
+│   │   ├── analytics/       # Analytics page with 4 charts
+│   │   ├── leads/
+│   │   │   ├── [id]/        # Lead detail page
+│   │   │   └── new/         # New lead page
+│   │   ├── layout.tsx       # Dashboard shell layout
+│   │   └── page.tsx         # Main dashboard
+│   ├── globals.css          # Design tokens + Tailwind v4 config
+│   ├── layout.tsx           # Root layout
+│   └── page.tsx             # Redirect to /dashboard
+├── components/
+│   ├── dashboard/           # MetricCard, MetricsGrid, charts
+│   ├── layout/              # Sidebar, Topbar, DashboardShell
+│   ├── leads/               # LeadTable, LeadForm, LeadModal, etc.
+│   ├── shared/              # SkipToContent, EmptyState, ErrorState, etc.
+│   └── ui/                  # Button, Badge, Card, Input, Select, etc.
+├── hooks/                   # useLeads, useLead, useDebounce, useToast, etc.
+├── lib/                     # utils, constants, validations, fonts, metadata, db
+└── types/                   # TypeScript interfaces
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Design System
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The app uses **CSS custom properties** for theming, mapped to Tailwind utilities via `@theme inline {}`. All tokens are defined in `src/app/globals.css`:
 
-## Deploy on Vercel
+- **Colors**: Navy base, sky-blue accent (dark) / white base, slate accent (light)
+- **Typography**: Inter font, 6 sizes from `--text-xs` to `--text-2xl`
+- **Spacing & Radius**: Consistent tokens for padding, margins, border radius
+- **Shadows**: 3 elevation levels
+- **Transitions**: `--duration-fast` (150ms), `--duration-base` (200ms), `--duration-slow` (300ms)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## API Endpoints
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/leads` | List leads (search, status, source, sortDir, page, pageSize) |
+| POST | `/api/leads` | Create a lead |
+| GET | `/api/leads/[id]` | Get lead by ID |
+| PUT | `/api/leads/[id]` | Update lead |
+| DELETE | `/api/leads/[id]` | Delete lead |
+
+All responses include a simulated 200-400ms network delay.
+
+## License
+
+MIT

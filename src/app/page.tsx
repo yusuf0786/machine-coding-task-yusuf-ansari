@@ -1,5 +1,7 @@
+// src/app/page.tsx — redirect to dashboard
+import { redirect } from 'next/navigation';
+import { ROUTES } from '@/lib/constants';
+
 export default function Home() {
-  return (
-    <h1>Hello World</h1>
-  );
+  redirect(ROUTES.dashboard);
 }
