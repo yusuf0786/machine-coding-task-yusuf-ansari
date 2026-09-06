@@ -138,6 +138,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Select dropdown option theming (light/dark) */
+select option {
+  background-color: var(--color-bg-base);
+  color: var(--color-text-primary);
+}
+
 /* Focus ring */
 :focus-visible {
   outline: 2px solid var(--color-accent);

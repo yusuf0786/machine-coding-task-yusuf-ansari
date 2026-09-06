@@ -35,7 +35,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           ref={ref}
           id={selectId}
           className={cn(
-            'w-full h-9 px-3 rounded-[var(--radius-sm)] border bg-[var(--color-bg-base)] text-[var(--color-text-primary)] text-[var(--text-sm)] transition-colors duration-[var(--duration-fast)] appearance-none cursor-pointer',
+            'select-themed w-full h-9 px-3 rounded-[var(--radius-sm)] border bg-[var(--color-bg-base)] text-[var(--color-text-primary)] text-[var(--text-sm)] transition-colors duration-[var(--duration-fast)] appearance-none cursor-pointer',
             'focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-transparent',
             'bg-[url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2394A3B8%22%20stroke-width%3D%222%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E")] bg-no-repeat bg-[right_0.5rem_center]',
             error
