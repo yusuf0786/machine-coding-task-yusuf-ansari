@@ -62,14 +62,6 @@ export default function LeadsPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => router.push(ROUTES.dashboard)}
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Dashboard
-          </Button>
           <div>
             <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">
               Leads
