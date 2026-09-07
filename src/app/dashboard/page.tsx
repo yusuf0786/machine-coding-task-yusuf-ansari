@@ -2,7 +2,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { MetricsGrid } from '@/components/dashboard/MetricsGrid';
 import { LeadTable } from '@/components/leads/LeadTable';
 import { LeadFilters } from '@/components/leads/LeadFilters';
@@ -12,13 +11,12 @@ import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { useLeads } from '@/hooks/useLeads';
 import { useDebounce } from '@/hooks/useDebounce';
-import { ROUTES, PAGE_SIZE, DEBOUNCE_MS } from '@/lib/constants';
+import { PAGE_SIZE, DEBOUNCE_MS } from '@/lib/constants';
 import { Plus } from 'lucide-react';
 import type { LeadStatus, LeadSource, Lead } from '@/types';
 import type { LeadFormValues } from '@/lib/validations';
 
 export default function DashboardPage() {
-  const router = useRouter();
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState<LeadStatus | ''>('');
   const [source, setSource] = useState<LeadSource | ''>('');
@@ -71,8 +69,8 @@ export default function DashboardPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <div>
+      <div className="flex flex-wrap items-center justify-between mb-6">
+        <div className='mb-3 sm:mb-0'>
           <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">
             Dashboard
           </h1>
@@ -80,7 +78,7 @@ export default function DashboardPage() {
             Overview of your lead pipeline
           </p>
         </div>
-        <Button variant="primary" onClick={() => setModalOpen(true)}>
+        <Button className='w-full sm:w-auto' variant="primary" onClick={() => setModalOpen(true)}>
           <Plus className="h-4 w-4 mr-2" />
           New Lead
         </Button>

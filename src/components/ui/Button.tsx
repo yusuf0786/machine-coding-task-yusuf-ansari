@@ -22,9 +22,9 @@ const buttonVariants = cva(
         icon: 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-muted)]',
       },
       size: {
-        sm: 'h-8 px-3 text-[var(--text-xs)]',
-        md: 'h-9 px-4 text-[var(--text-sm)]',
-        lg: 'h-11 px-6 text-[var(--text-base)]',
+        sm: 'h-8 px-3 text-xs',
+        md: 'h-9 px-4 text-sm',
+        lg: 'h-11 px-6 text-base',
       },
     },
     compoundVariants: [

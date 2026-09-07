@@ -2,7 +2,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { LeadTable } from '@/components/leads/LeadTable';
 import { LeadFilters } from '@/components/leads/LeadFilters';
 import { LeadModal } from '@/components/leads/LeadModal';
@@ -10,13 +9,12 @@ import { LeadForm } from '@/components/leads/LeadForm';
 import { Button } from '@/components/ui/Button';
 import { useLeads } from '@/hooks/useLeads';
 import { useDebounce } from '@/hooks/useDebounce';
-import { ROUTES, PAGE_SIZE, DEBOUNCE_MS } from '@/lib/constants';
-import { Plus, ArrowLeft } from 'lucide-react';
-import type { LeadStatus, LeadSource, Lead } from '@/types';
+import { PAGE_SIZE, DEBOUNCE_MS } from '@/lib/constants';
+import { Plus } from 'lucide-react';
+import type { LeadStatus, LeadSource } from '@/types';
 import type { LeadFormValues } from '@/lib/validations';
 
 export default function LeadsPage() {
-  const router = useRouter();
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState<LeadStatus | ''>('');
   const [source, setSource] = useState<LeadSource | ''>('');
@@ -60,8 +58,8 @@ export default function LeadsPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center justify-between mb-6">
+        <div className="flex items-center gap-4 mb-3 sm:mb-0">
           <div>
             <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">
               Leads
@@ -71,7 +69,7 @@ export default function LeadsPage() {
             </p>
           </div>
         </div>
-        <Button variant="primary" onClick={() => setModalOpen(true)}>
+        <Button className='w-full sm:w-auto' variant="primary" onClick={() => setModalOpen(true)}>
           <Plus className="h-4 w-4 mr-2" />
           New Lead
         </Button>
