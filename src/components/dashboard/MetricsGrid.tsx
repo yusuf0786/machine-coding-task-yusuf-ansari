@@ -18,7 +18,7 @@ interface MetricsGridProps {
 }
 
 export function MetricsGrid({ leads }: MetricsGridProps) {
-  const total = leads.length;
+  const total = leads.length <= 1 && leads[0].name ===  '-' && leads[0].email === '-' ? 0 : leads.length;
   const newCount = leads.filter((l) => l.status === 'New').length;
   const contactedCount = leads.filter((l) => l.status === 'Contacted').length;
   const qualifiedCount = leads.filter((l) => l.status === 'Qualified').length;

@@ -40,7 +40,14 @@ export default function DashboardPage() {
   useEffect(() => {
     fetch('/api/leads?pageSize=200')
       .then((r) => r.json())
-      .then((d) => setAllLeads(d.data ?? []))
+      .then((d) => {
+        if (d.data.length > 0) {
+          setAllLeads(d.data ?? []);
+        } else {
+          const dummyLead: Lead[] = [{ _id: "", name: "-", email: "-", phone: "", company: "-", status: "" as LeadStatus, source: "" as LeadSource, createdBy: "", assignedTo: null, assignedToUser: undefined, createdDate: "", createdAt: "", updatedAt: "", timeline: [] }];
+          setAllLeads(dummyLead);
+        }
+      })
       .catch(() => {});
   }, [tableLeads]);
 
