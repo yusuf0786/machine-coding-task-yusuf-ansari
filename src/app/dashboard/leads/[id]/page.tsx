@@ -118,7 +118,7 @@ export default function LeadDetailPage(props: LeadDetailPageProps) {
             <CardContent>
               <StatusChanger
                 currentStatus={lead.status}
-                leadId={lead.id}
+                leadId={lead._id || lead.id || id}
                 onStatusChanged={() => mutate()}
               />
             </CardContent>

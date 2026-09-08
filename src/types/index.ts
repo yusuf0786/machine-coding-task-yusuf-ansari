@@ -5,10 +5,11 @@ export type LeadStatus = 'New' | 'Contacted' | 'Qualified' | 'Converted' | 'Lost
 export type LeadSource =
   | 'Website'
   | 'Referral'
-  | 'LinkedIn'
-  | 'Cold Call'
+  | 'Social Media'
   | 'Email Campaign'
-  | 'Trade Show'
+  | 'Cold Call'
+  | 'Event'
+  | 'Partner'
   | 'Other';
 
 export interface TimelineEvent {
@@ -16,19 +17,49 @@ export interface TimelineEvent {
   label: string;
 }
 
+export interface User {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AuthPayload {
+  userId: string;
+  email: string;
+  name: string;
+  role: string;
+}
+
+export interface Session {
+  userId: string;
+  email: string;
+  name: string;
+  role: string;
+  iat: number;
+  exp: number;
+}
+
 export interface Lead {
-  id: string;
+  _id: string;
   name: string;
   email: string;
   phone: string;
   company: string;
   status: LeadStatus;
   source: LeadSource;
-  createdDate: string; // ISO 8601
+  createdBy: string;
+  assignedTo: string | null;
+  assignedToUser?: Pick<User, '_id' | 'name' | 'email'>;
+  createdDate?: string;
+  createdAt: string;
+  updatedAt: string;
   timeline: TimelineEvent[];
 }
 
-export type LeadFormData = Omit<Lead, 'id' | 'createdDate' | 'timeline'>;
+export type LeadFormData = Omit<Lead, '_id' | 'createdAt' | 'updatedAt' | 'timeline' | 'createdBy'>;
 
 export interface PaginatedResponse<T> {
   data: T[];

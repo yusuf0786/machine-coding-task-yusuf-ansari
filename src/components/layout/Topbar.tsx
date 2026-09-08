@@ -4,6 +4,7 @@
 import { Menu, Bell } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { ThemeToggle } from '@/components/shared/ThemeToggle';
+import { UserMenu } from '@/components/shared/UserMenu';
 
 interface TopbarProps {
   onMenuToggle: () => void;
@@ -32,8 +33,8 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
         <Button variant="icon" size="sm" aria-label="Notifications">
           <Bell className="h-4 w-4" />
         </Button>
-        <div className="w-8 h-8 rounded-full bg-[var(--color-accent)] flex items-center justify-center text-white text-[var(--text-xs)] font-semibold ml-2">
-          YA
+        <div className="pl-2 border-l border-[var(--color-border)] ml-1">
+          <UserMenu />
         </div>
       </div>
     </header>

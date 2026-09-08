@@ -9,12 +9,35 @@ import { ROUTES } from '@/lib/constants';
 import { formatDate, getInitials } from '@/lib/utils';
 import type { Lead } from '@/types';
 
+// 8 predefined accent colors for deterministic avatar coloring
+const AVATAR_COLORS = [
+  'bg-blue-600',
+  'bg-emerald-600',
+  'bg-violet-600',
+  'bg-amber-600',
+  'bg-rose-600',
+  'bg-cyan-600',
+  'bg-indigo-600',
+  'bg-fuchsia-600',
+];
+
+function getAvatarColor(name: string): string {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash) % AVATAR_COLORS.length;
+  return AVATAR_COLORS[index];
+}
+
 interface LeadTableRowProps {
   lead: Lead;
   onDelete: (lead: Lead) => void;
 }
 
 export function LeadTableRow({ lead, onDelete }: LeadTableRowProps) {
+  const leadId = lead._id || lead.id || '';
+
   return (
     <tr className="border-b border-[var(--color-border)] hover:bg-[var(--color-bg-muted)]/50 transition-colors duration-[var(--duration-fast)]">
       <td className="px-4 py-3">
@@ -24,7 +47,7 @@ export function LeadTableRow({ lead, onDelete }: LeadTableRowProps) {
           </div>
           <div className="min-w-0">
             <Link
-              href={ROUTES.leadDetail(lead.id)}
+              href={ROUTES.leadDetail(leadId)}
               className="text-[var(--text-sm)] font-medium text-[var(--color-text-primary)] hover:text-[var(--color-accent)] transition-colors truncate block"
             >
               {lead.name}
@@ -41,15 +64,31 @@ export function LeadTableRow({ lead, onDelete }: LeadTableRowProps) {
       <td className="px-4 py-3 hidden lg:table-cell">
         <LeadStatusBadge status={lead.status} />
       </td>
+      <td className="px-4 py-3 text-[var(--text-sm)] text-[var(--color-text-secondary)] hidden lg:table-cell">
+        {lead.assignedToUser ? (
+          <div className="flex items-center gap-2">
+            <div
+              className={`w-5 h-5 rounded-full ${getAvatarColor(
+                lead.assignedToUser.name
+              )} text-white flex items-center justify-center text-[10px] font-medium shrink-0`}
+            >
+              {getInitials(lead.assignedToUser.name)}
+            </div>
+            <span className="truncate max-w-[120px]">{lead.assignedToUser.name}</span>
+          </div>
+        ) : (
+          <span className="text-[var(--color-text-muted)]">—</span>
+        )}
+      </td>
       <td className="px-4 py-3 text-[var(--text-sm)] text-[var(--color-text-secondary)] hidden xl:table-cell">
         {lead.source}
       </td>
       <td className="px-4 py-3 text-[var(--text-sm)] text-[var(--color-text-muted)] hidden lg:table-cell">
-        {formatDate(lead.createdDate)}
+        {formatDate(lead.createdAt)}
       </td>
       <td className="px-4 py-3">
         <div className="flex items-center gap-1 justify-end">
-          <Link href={ROUTES.leadDetail(lead.id)}>
+          <Link href={ROUTES.leadDetail(leadId)}>
             <Button variant="icon" size="sm" aria-label={`View ${lead.name}`}>
               <Eye className="h-4 w-4" />
             </Button>

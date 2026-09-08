@@ -43,12 +43,14 @@ export function LeadsOverTimeChart({ leads }: LeadsOverTimeChartProps) {
   // Group leads by day and show cumulative count
   const sorted = [...leads].sort(
     (a, b) =>
-      new Date(a.createdDate).getTime() - new Date(b.createdDate).getTime()
+      new Date(a.createdAt || a.createdDate || 0).getTime() -
+      new Date(b.createdAt || b.createdDate || 0).getTime()
   );
 
   const dailyMap = new Map<string, number>();
   for (const lead of sorted) {
-    const day = lead.createdDate.slice(0, 10); // YYYY-MM-DD
+    const dateStr = lead.createdAt || lead.createdDate || new Date().toISOString();
+    const day = dateStr.slice(0, 10); // YYYY-MM-DD
     dailyMap.set(day, (dailyMap.get(day) ?? 0) + 1);
   }
 

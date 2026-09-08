@@ -12,10 +12,11 @@ export const LEAD_STATUSES: LeadStatus[] = [
 export const LEAD_SOURCES: LeadSource[] = [
   'Website',
   'Referral',
-  'LinkedIn',
-  'Cold Call',
+  'Social Media',
   'Email Campaign',
-  'Trade Show',
+  'Cold Call',
+  'Event',
+  'Partner',
   'Other',
 ];
 
@@ -62,12 +63,36 @@ export const STATUS_CONFIG: Record<
 
 export const ROUTES = {
   home: '/',
+  login: '/login',
+  register: '/register',
+  logout: '/api/auth/logout',
   dashboard: '/dashboard',
   leads: '/dashboard/leads',
   leadDetail: (id: string) => `/dashboard/leads/${id}`,
   newLead: '/dashboard/leads/new',
   analytics: '/dashboard/analytics',
+  api: {
+    auth: {
+      register: '/api/auth/register',
+      login: '/api/auth/login',
+      logout: '/api/auth/logout',
+      me: '/api/auth/me',
+    },
+    users: '/api/users',
+    leads: '/api/leads',
+    leadDetail: (id: string) => `/api/leads/${id}`,
+  },
 } as const;
+
+export const PUBLIC_ROUTES = [
+  '/login',
+  '/register',
+  '/api/auth/login',
+  '/api/auth/register',
+  '/api/auth/logout',
+] as const;
+
+export const PROTECTED_ROUTES = ['/dashboard'] as const;
 
 export const NAV_LINKS = [
   { href: ROUTES.dashboard, label: 'Dashboard', icon: 'LayoutDashboard' },

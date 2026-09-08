@@ -40,7 +40,8 @@ export function LeadTable({
     if (!deleteTarget) return;
     setDeleting(true);
     try {
-      const res = await fetch(`/api/leads/${deleteTarget.id}`, {
+      const leadId = deleteTarget._id || deleteTarget.id;
+      const res = await fetch(`/api/leads/${leadId}`, {
         method: 'DELETE',
       });
       if (!res.ok) throw new Error('Failed to delete');
@@ -79,6 +80,9 @@ export function LeadTable({
                 <th className="px-4 py-3 text-[var(--text-xs)] font-semibold text-[var(--color-text-muted)] uppercase tracking-wider hidden lg:table-cell">
                   Status
                 </th>
+                <th className="px-4 py-3 text-[var(--text-xs)] font-semibold text-[var(--color-text-muted)] uppercase tracking-wider hidden lg:table-cell">
+                  Assigned To
+                </th>
                 <th className="px-4 py-3 text-[var(--text-xs)] font-semibold text-[var(--color-text-muted)] uppercase tracking-wider hidden xl:table-cell">
                   Source
                 </th>
@@ -101,7 +105,7 @@ export function LeadTable({
               {isLoading && !data ? (
                 Array.from({ length: 5 }).map((_, i) => (
                   <tr key={i} className="border-b border-[var(--color-border)]">
-                    <td colSpan={6} className="px-4 py-3">
+                    <td colSpan={7} className="px-4 py-3">
                       <SkeletonRow />
                     </td>
                   </tr>
@@ -109,14 +113,14 @@ export function LeadTable({
               ) : data && data.data.length > 0 ? (
                 data.data.map((lead) => (
                   <LeadTableRow
-                    key={lead.id}
+                    key={lead._id || lead.id}
                     lead={lead}
                     onDelete={setDeleteTarget}
                   />
                 ))
               ) : (
                 <tr>
-                  <td colSpan={6}>
+                  <td colSpan={7}>
                     <EmptyState
                       title="No leads found"
                       message="Try adjusting your filters or add a new lead to get started."

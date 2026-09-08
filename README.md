@@ -68,6 +68,34 @@ npm run build
 npm start
 ```
 
+## Authentication
+
+LeadPulse uses a scratch JWT authentication system (no NextAuth, Clerk, or Auth0):
+
+- **JWT Secret**: Generate with `openssl rand -base64 32` and set `JWT_SECRET` in `.env.local`
+- **Cookie**: `crm_token` (httpOnly, sameSite=lax, secure in production, 7-day expiry)
+- **Registration**: `/register` — password must be ≥8 chars with 1 uppercase, 1 number, 1 special char (`!@#$%^&*`)
+- **Login**: `/login` — timing-safe verification, generic error message
+- **Protected Routes**: `/dashboard/*` protected via Edge middleware (`src/middleware.ts`) and server-side layout checks
+- **Per-User Ownership**: Leads filtered by `{ $or: [{ createdBy: userId }, { assignedTo: userId }] }`; creators can delete; reassign allowed via assigned user dropdown
+
+### MongoDB Setup
+
+```bash
+# 1. Create a MongoDB Atlas cluster (or local MongoDB)
+# 2. Copy .env.example -> .env.local and set MONGODB_URI
+cp .env.example .env.local
+
+# 3. Start the app
+npm run dev
+```
+
+### Seeding
+
+Run `npm run seed` (if available) or manually create users via `/api/auth/register` to begin using the CRM.
+
+---
+
 ## Project Structure
 
 ```
