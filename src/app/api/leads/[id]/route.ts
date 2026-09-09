@@ -7,226 +7,277 @@ import Lead from '@/models/Lead';
 import User from '@/models/User';
 
 function getIdString(value: any): string | null {
-  if (!value) return null;
+if (!value) return null;
 
-  // Populated MongoDB document
-  if (value._id) {
-    return value._id.toString();
-  }
+if (value._id) {
+return value._id.toString();
+}
 
-  // Normal ObjectId
-  return value.toString();
+return value.toString();
 }
 
 function isOwnerOrAssignee(
-  lead: {
-    createdBy: any;
-    assignedTo: any;
-  },
-  userId: string
+lead: {
+createdBy: any;
+assignedTo: any;
+},
+userId: string
 ): boolean {
-  const createdById = getIdString(lead.createdBy);
-  const assignedToId = getIdString(lead.assignedTo);
+const createdById = getIdString(lead.createdBy);
+const assignedToId = getIdString(lead.assignedTo);
 
-  console.log('Authorization check:', {
-    sessionUserId: userId,
-    createdById,
-    assignedToId,
-  });
+return createdById === userId || assignedToId === userId;
+}
 
-  return createdById === userId || assignedToId === userId;
+function serializeLead(lead: any) {
+const {
+_id,
+createdBy,
+assignedTo,
+...rest
+} = lead;
+
+const populatedAssignedTo =
+assignedTo && typeof assignedTo === 'object' && assignedTo._id
+? assignedTo
+: null;
+
+return {
+...rest,
+id: _id.toString(),
+createdBy: getIdString(createdBy),
+assignedTo: getIdString(assignedTo),
+assignedToUser: populatedAssignedTo
+? {
+id: populatedAssignedTo._id.toString(),
+name: populatedAssignedTo.name,
+email: populatedAssignedTo.email,
+}
+: null,
+};
 }
 
 export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+request: NextRequest,
+{ params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const session = await getSessionUser(request);
-    if (!session) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
+try {
+const session = await getSessionUser(request);
 
-    const { id } = await params;
+if (!session) {
+  return NextResponse.json(
+    { message: 'Unauthorized' },
+    { status: 401 }
+  );
+}
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return NextResponse.json({ message: 'Invalid lead ID' }, { status: 400 });
-    }
+const { id } = await params;
 
-    await connectDB();
-    const lead = await Lead.findById(id)
-      .populate('assignedTo', 'name email')
-      .populate('createdBy', 'name email')
-      .lean();
+if (!mongoose.Types.ObjectId.isValid(id)) {
+  return NextResponse.json(
+    { message: 'Invalid lead ID' },
+    { status: 400 }
+  );
+}
 
-    if (!lead) {
-      return NextResponse.json({ message: 'Lead not found' }, { status: 404 });
-    }
+await connectDB();
 
-    if (!isOwnerOrAssignee(lead, session.userId)) {
-      return NextResponse.json({ message: 'Forbidden' }, { status: 403 });
-    }
+const lead = await Lead.findById(id)
+  .populate('assignedTo', 'name email')
+  .populate('createdBy', 'name email')
+  .lean();
 
-    const serializedLead = {
-      ...lead,
-      _id: lead._id.toString(),
+if (!lead) {
+  return NextResponse.json(
+    { message: 'Lead not found' },
+    { status: 404 }
+  );
+}
 
-      createdBy: getIdString(lead.createdBy),
+if (!isOwnerOrAssignee(lead, session.userId)) {
+  return NextResponse.json(
+    { message: 'Forbidden' },
+    { status: 403 }
+  );
+}
 
-      assignedTo: getIdString(lead.assignedTo),
+return NextResponse.json(serializeLead(lead));
 
-      assignedToUser:
-        lead.assignedTo && typeof lead.assignedTo === 'object'
-          ? {
-              _id: getIdString(lead.assignedTo),
-              name: lead.assignedTo.name,
-              email: lead.assignedTo.email,
-            }
-          : null,
-    };
+} catch (error) {
+console.error('Get lead error:', error);
 
-    return NextResponse.json(serializedLead);
-  } catch (error) {
-    console.error('Get lead error:', error);
-    return NextResponse.json(
-      { message: 'Internal server error' },
-      { status: 500 }
-    );
-  }
+return NextResponse.json(
+  { message: 'Internal server error' },
+  { status: 500 }
+);
+
+}
 }
 
 export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+request: NextRequest,
+{ params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const session = await getSessionUser(request);
-    if (!session) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
+try {
+const session = await getSessionUser(request);
 
-    const { id } = await params;
+if (!session) {
+  return NextResponse.json(
+    { message: 'Unauthorized' },
+    { status: 401 }
+  );
+}
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return NextResponse.json({ message: 'Invalid lead ID' }, { status: 400 });
-    }
+const { id } = await params;
 
-    await connectDB();
-    const existingLead = await Lead.findById(id);
+if (!mongoose.Types.ObjectId.isValid(id)) {
+  return NextResponse.json(
+    { message: 'Invalid lead ID' },
+    { status: 400 }
+  );
+}
 
-    if (!existingLead) {
-      return NextResponse.json({ message: 'Lead not found' }, { status: 404 });
-    }
+await connectDB();
 
-    if (!isOwnerOrAssignee(existingLead, session.userId)) {
-      return NextResponse.json({ message: 'Forbidden' }, { status: 403 });
-    }
+const existingLead = await Lead.findById(id);
 
-    const body = await request.json();
-    const timeline = [...(existingLead.timeline || [])];
+if (!existingLead) {
+  return NextResponse.json(
+    { message: 'Lead not found' },
+    { status: 404 }
+  );
+}
 
-    // Track status change in timeline
-    if (body.status && body.status !== existingLead.status) {
+if (!isOwnerOrAssignee(existingLead, session.userId)) {
+  return NextResponse.json(
+    { message: 'Forbidden' },
+    { status: 403 }
+  );
+}
+
+const body = await request.json();
+const timeline = [...(existingLead.timeline || [])];
+
+if (body.status && body.status !== existingLead.status) {
+  timeline.push({
+    date: new Date(),
+    label: `Status changed from ${existingLead.status} to ${body.status} by ${session.name}`,
+  });
+}
+
+if (body.assignedTo !== undefined) {
+  const oldAssignedTo = existingLead.assignedTo?.toString();
+  const newAssignedTo = body.assignedTo || null;
+
+  if (oldAssignedTo !== newAssignedTo) {
+    if (newAssignedTo) {
+      const assignedUser = await User.findById(newAssignedTo)
+        .select('name');
+
+      if (assignedUser) {
+        timeline.push({
+          date: new Date(),
+          label: `Assigned to ${assignedUser.name} by ${session.name}`,
+        });
+      }
+    } else {
       timeline.push({
         date: new Date(),
-        label: `Status changed from ${existingLead.status} to ${body.status} by ${session.name}`,
+        label: `Unassigned by ${session.name}`,
       });
     }
-
-    // Track assignment change in timeline
-    if (body.assignedTo !== undefined) {
-      const oldAssignedTo = existingLead.assignedTo?.toString();
-      const newAssignedTo = body.assignedTo || null;
-
-      if (oldAssignedTo !== newAssignedTo) {
-        if (newAssignedTo) {
-          // Fetch the assigned user's name
-          const assignedUser = await User.findById(newAssignedTo).select('name');
-          if (assignedUser) {
-            timeline.push({
-              date: new Date(),
-              label: `Assigned to ${assignedUser.name} by ${session.name}`,
-            });
-          }
-        } else {
-          timeline.push({
-            date: new Date(),
-            label: `Unassigned by ${session.name}`,
-          });
-        }
-      }
-    }
-
-    const updateData = {
-      ...body,
-      timeline,
-    };
-
-    const updated = await Lead.findByIdAndUpdate(id, { $set: updateData }, { new: true, runValidators: true })
-      .populate('assignedTo', 'name email')
-      .populate('createdBy', 'name email')
-      .lean();
-
-    const serializedLead = {
-      ...updated,
-      _id: updated!._id.toString(),
-      createdBy: (updated!.createdBy as any)?._id?.toString() || updated!.createdBy?.toString(),
-      assignedTo: (updated!.assignedTo as any)?._id?.toString() || updated!.assignedTo?.toString() || null,
-      assignedToUser: updated!.assignedTo
-        ? {
-            _id: (updated!.assignedTo as any)._id.toString(),
-            name: (updated!.assignedTo as any).name,
-            email: (updated!.assignedTo as any).email,
-          }
-        : null,
-    };
-
-    return NextResponse.json(serializedLead);
-  } catch (error) {
-    console.error('Update lead error:', error);
-    return NextResponse.json(
-      { message: 'Failed to update lead' },
-      { status: 500 }
-    );
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const session = await getSessionUser(request);
-    if (!session) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-    }
+const updateData = {
+  ...body,
+  timeline,
+};
 
-    const { id } = await params;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return NextResponse.json({ message: 'Invalid lead ID' }, { status: 400 });
-    }
-
-    await connectDB();
-    const lead = await Lead.findById(id);
-
-    if (!lead) {
-      return NextResponse.json({ message: 'Lead not found' }, { status: 404 });
-    }
-
-    // Only the creator can delete
-    if (lead.createdBy.toString() !== session.userId) {
-      return NextResponse.json({ message: 'Forbidden' }, { status: 403 });
-    }
-
-    await Lead.findByIdAndDelete(id);
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error('Delete lead error:', error);
-    return NextResponse.json(
-      { message: 'Failed to delete lead' },
-      { status: 500 }
-    );
+const updated = await Lead.findByIdAndUpdate(
+  id,
+  { $set: updateData },
+  {
+    new: true,
+    runValidators: true,
   }
+)
+  .populate('assignedTo', 'name email')
+  .populate('createdBy', 'name email')
+  .lean();
+
+if (!updated) {
+  return NextResponse.json(
+    { message: 'Lead not found after update' },
+    { status: 404 }
+  );
+}
+
+return NextResponse.json(serializeLead(updated));
+
+} catch (error) {
+console.error('Update lead error:', error);
+
+return NextResponse.json(
+  { message: 'Failed to update lead' },
+  { status: 500 }
+);
+
+}
+}
+
+export async function DELETE(
+request: NextRequest,
+{ params }: { params: Promise<{ id: string }> }
+) {
+try {
+const session = await getSessionUser(request);
+
+if (!session) {
+  return NextResponse.json(
+    { message: 'Unauthorized' },
+    { status: 401 }
+  );
+}
+
+const { id } = await params;
+
+if (!mongoose.Types.ObjectId.isValid(id)) {
+  return NextResponse.json(
+    { message: 'Invalid lead ID' },
+    { status: 400 }
+  );
+}
+
+await connectDB();
+
+const lead = await Lead.findById(id);
+
+if (!lead) {
+  return NextResponse.json(
+    { message: 'Lead not found' },
+    { status: 404 }
+  );
+}
+
+if (lead.createdBy.toString() !== session.userId) {
+  return NextResponse.json(
+    { message: 'Forbidden' },
+    { status: 403 }
+  );
+}
+
+await Lead.findByIdAndDelete(id);
+
+return NextResponse.json({ success: true });
+
+} catch (error) {
+console.error('Delete lead error:', error);
+
+return NextResponse.json(
+  { message: 'Failed to delete lead' },
+  { status: 500 }
+);
+
+}
 }

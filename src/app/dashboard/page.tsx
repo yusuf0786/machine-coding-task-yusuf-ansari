@@ -44,7 +44,7 @@ export default function DashboardPage() {
         if (d.data.length > 0) {
           setAllLeads(d.data ?? []);
         } else {
-          const dummyLead: Lead[] = [{ _id: "", name: "-", email: "-", phone: "", company: "-", status: "" as LeadStatus, source: "" as LeadSource, createdBy: "", assignedTo: null, assignedToUser: undefined, createdDate: "", createdAt: "", updatedAt: "", timeline: [] }];
+          const dummyLead: Lead[] = [{ id: "", name: "-", email: "-", phone: "", company: "-", status: "" as LeadStatus, source: "" as LeadSource, createdBy: "", assignedTo: null, assignedToUser: undefined, createdDate: "", createdAt: "", updatedAt: "", timeline: [] }];
           setAllLeads(dummyLead);
         }
       })

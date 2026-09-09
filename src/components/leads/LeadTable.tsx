@@ -40,7 +40,7 @@ export function LeadTable({
     if (!deleteTarget) return;
     setDeleting(true);
     try {
-      const leadId = deleteTarget._id || deleteTarget.id;
+      const leadId = deleteTarget.id;
       const res = await fetch(`/api/leads/${leadId}`, {
         method: 'DELETE',
       });
@@ -113,7 +113,7 @@ export function LeadTable({
               ) : data && data.data.length > 0 ? (
                 data.data.map((lead) => (
                   <LeadTableRow
-                    key={lead._id || lead.id}
+                    key={lead.id}
                     lead={lead}
                     onDelete={setDeleteTarget}
                   />

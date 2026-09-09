@@ -262,7 +262,7 @@ function InlineAssigneeEdit({ lead, leadId }: { lead: Lead; leadId: string }) {
 }
 
 export function LeadDetailCard({ lead }: LeadDetailCardProps) {
-  const leadId = lead._id || lead.id || '';
+  const leadId = lead.id || '';
 
   return (
     <Card>

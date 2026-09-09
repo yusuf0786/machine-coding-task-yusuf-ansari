@@ -36,7 +36,7 @@ interface LeadTableRowProps {
 }
 
 export function LeadTableRow({ lead, onDelete }: LeadTableRowProps) {
-  const leadId = lead._id || lead.id || '';
+  const leadId = lead.id || '';
 
   return (
     <tr className="border-b border-[var(--color-border)] hover:bg-[var(--color-bg-muted)]/50 transition-colors duration-[var(--duration-fast)]">

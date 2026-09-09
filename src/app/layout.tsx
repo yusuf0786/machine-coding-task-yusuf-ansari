@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { inter } from "@/lib/fonts";
 import { createMetadata } from "@/lib/metadata";
 import { SkipToContent } from "@/components/shared/SkipToContent";
@@ -6,7 +7,7 @@ import "./globals.css";
 
 export const metadata: Metadata = createMetadata();
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"

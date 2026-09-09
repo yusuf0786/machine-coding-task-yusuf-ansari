@@ -43,7 +43,7 @@ export interface Session {
 }
 
 export interface Lead {
-  _id: string;
+  id: string;
   name: string;
   email: string;
   phone: string;
