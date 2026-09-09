@@ -6,14 +6,35 @@ import { getSessionUser } from '@/lib/auth';
 import Lead from '@/models/Lead';
 import User from '@/models/User';
 
+function getIdString(value: any): string | null {
+  if (!value) return null;
+
+  // Populated MongoDB document
+  if (value._id) {
+    return value._id.toString();
+  }
+
+  // Normal ObjectId
+  return value.toString();
+}
+
 function isOwnerOrAssignee(
-  lead: { createdBy: mongoose.Types.ObjectId; assignedTo: mongoose.Types.ObjectId | null },
+  lead: {
+    createdBy: any;
+    assignedTo: any;
+  },
   userId: string
 ): boolean {
-  return (
-    lead.createdBy.toString() === userId ||
-    lead.assignedTo?.toString() === userId
-  );
+  const createdById = getIdString(lead.createdBy);
+  const assignedToId = getIdString(lead.assignedTo);
+
+  console.log('Authorization check:', {
+    sessionUserId: userId,
+    createdById,
+    assignedToId,
+  });
+
+  return createdById === userId || assignedToId === userId;
 }
 
 export async function GET(
@@ -49,15 +70,19 @@ export async function GET(
     const serializedLead = {
       ...lead,
       _id: lead._id.toString(),
-      createdBy: (lead.createdBy as any)?._id?.toString() || lead.createdBy?.toString(),
-      assignedTo: (lead.assignedTo as any)?._id?.toString() || lead.assignedTo?.toString() || null,
-      assignedToUser: lead.assignedTo
-        ? {
-            _id: (lead.assignedTo as any)._id.toString(),
-            name: (lead.assignedTo as any).name,
-            email: (lead.assignedTo as any).email,
-          }
-        : null,
+
+      createdBy: getIdString(lead.createdBy),
+
+      assignedTo: getIdString(lead.assignedTo),
+
+      assignedToUser:
+        lead.assignedTo && typeof lead.assignedTo === 'object'
+          ? {
+              _id: getIdString(lead.assignedTo),
+              name: lead.assignedTo.name,
+              email: lead.assignedTo.email,
+            }
+          : null,
     };
 
     return NextResponse.json(serializedLead);

@@ -13,7 +13,7 @@ const LEAD_SOURCES = [
 ] as const;
 
 export interface ILead extends Document {
-  _id: string;
+  _id: Types.ObjectId;
   name: string;
   email: string;
   phone: string;
