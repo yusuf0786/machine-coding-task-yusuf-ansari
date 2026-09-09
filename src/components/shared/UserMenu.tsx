@@ -110,7 +110,7 @@ export function UserMenu() {
         onClick={() => setIsOpen(!isOpen)}
         aria-haspopup="true"
         aria-expanded={isOpen}
-        className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
       >
         {/* Avatar Circle */}
         <div
@@ -120,7 +120,7 @@ export function UserMenu() {
         </div>
 
         {/* User Name */}
-        <span className="hidden sm:block text-sm font-medium text-zinc-700 dark:text-zinc-200 max-w-[120px] truncate">
+        <span className="hidden sm:block text-sm font-medium text-text-primary dark:text-text-primary max-w-[120px] truncate">
           {user.name}
         </span>
 
@@ -157,7 +157,7 @@ export function UserMenu() {
               disabled
               role="menuitem"
               title="Coming soon"
-              className="w-full px-4 py-2 text-left text-sm text-zinc-400 dark:text-zinc-500 flex items-center gap-2 cursor-not-allowed opacity-60"
+              className="w-full px-4 py-2 text-left text-sm text-text-muted dark:text-text-muted flex items-center gap-2 cursor-not-allowed opacity-60"
             >
               <UserIcon className="w-4 h-4" />
               <span>Profile (Coming soon)</span>

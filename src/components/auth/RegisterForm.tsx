@@ -107,7 +107,7 @@ export function RegisterForm() {
       <div>
         <label
           htmlFor="name"
-          className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1"
+          className="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-1"
         >
           Full Name
         </label>
@@ -137,7 +137,7 @@ export function RegisterForm() {
       <div>
         <label
           htmlFor="email"
-          className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1"
+          className="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-1"
         >
           Email address
         </label>
@@ -167,7 +167,7 @@ export function RegisterForm() {
       <div>
         <label
           htmlFor="password"
-          className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1"
+          className="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-1"
         >
           Password
         </label>
@@ -226,9 +226,9 @@ export function RegisterForm() {
                 }`}
               />
             </div>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 flex justify-between">
+            <p className="text-xs text-text-secondary dark:text-text-secondary flex justify-between">
               <span>Strength: {passwordStrength.label}</span>
-              <span className="text-[10px] text-zinc-400">
+              <span className="text-[10px] text-text-muted">
                 Min. 8 chars, 1 uppercase, 1 number, 1 special char
               </span>
             </p>
@@ -246,7 +246,7 @@ export function RegisterForm() {
       <div>
         <label
           htmlFor="confirmPassword"
-          className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1"
+          className="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-1"
         >
           Confirm Password
         </label>
@@ -303,7 +303,7 @@ export function RegisterForm() {
       </button>
 
       {/* Login Link */}
-      <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
+      <p className="text-center text-sm text-text-secondary dark:text-text-secondary">
         Already have an account?{' '}
         <Link
           href="/login"

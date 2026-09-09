@@ -71,7 +71,7 @@ export function LoginForm() {
       <div>
         <label
           htmlFor="email"
-          className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1"
+          className="block text-sm font-medium text-text-secondary dark:text-text-secondary mb-1"
         >
           Email address
         </label>
@@ -102,11 +102,11 @@ export function LoginForm() {
         <div className="flex items-center justify-between mb-1">
           <label
             htmlFor="password"
-            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            className="block text-sm font-medium text-text-secondary dark:text-text-secondary"
           >
             Password
           </label>
-          <span className="text-xs text-zinc-400 dark:text-zinc-500 cursor-not-allowed">
+          <span className="text-xs text-text-muted dark:text-text-muted cursor-not-allowed">
             Forgot password?
           </span>
         </div>
@@ -163,7 +163,7 @@ export function LoginForm() {
       </button>
 
       {/* Register Link */}
-      <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
+      <p className="text-center text-sm text-text-secondary dark:text-text-secondary">
         Don&apos;t have an account?{' '}
         <Link
           href="/register"

@@ -23,7 +23,7 @@ export interface ILead extends Document {
   createdBy: Types.ObjectId;
   assignedTo: Types.ObjectId | null;
   assignedToUser?: {
-    _id: string;
+    id: string;
     name: string;
     email: string;
   };
